@@ -5,7 +5,7 @@ const incBtn = document.getElementById("inc");
 const decBtn = document.getElementById("dec");
 
 const notes = ["A", "B", "C", "D", "E", "F", "G"];
-let time = 1000;
+let time = 1;
 let changed = false;
 let interval = null;
 
@@ -18,14 +18,14 @@ startBtn.addEventListener("click", () => {
 })
 
 incBtn.addEventListener("click", () => {
-    time += 1000;
+    time += 0.5;
     timeElem.innerHTML = time;
     changed = true;
 }
 )
 
 decBtn.addEventListener("click", () => {
-    time -= 1000;
+    time -= 0.5;
     timeElem.innerHTML = time;
     changed = true;
 }
@@ -46,7 +46,7 @@ function temp(){
                 }
                 const randomNumber = Math.floor(Math.random() * notes.length);
                 display.innerHTML = notes[randomNumber];
-            }, time
+            }, time*1000
         )
     }
 }
