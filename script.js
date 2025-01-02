@@ -2,6 +2,7 @@ const startBtn = document.getElementById("start-btn");
 const display = document.getElementById("display");
 const timeElem = document.getElementById("time");
 const incBtn = document.getElementById("inc");
+const body = document.querySelector("body");
 const decBtn = document.getElementById("dec");
 
 const notes = ["A", "B", "C", "D", "E", "F", "G"];
@@ -17,6 +18,14 @@ startBtn.addEventListener("click", () => {
     temp()
 })
 
+body.addEventListener("keydown", (event) => {
+    if(event.key === " "){
+        startShowing = !startShowing;
+        startBtn.innerHTML = startShowing ? "Stop" : "Start";
+        temp()
+    }
+})
+
 incBtn.addEventListener("click", () => {
     time += 0.5;
     timeElem.innerHTML = time;
@@ -24,11 +33,30 @@ incBtn.addEventListener("click", () => {
 }
 )
 
+body.addEventListener("keydown", (event) => {
+
+    if(event.key === "i"){
+        time += 0.5;
+        timeElem.innerHTML = time;
+        changed = true;
+    }
+    }
+)
+
 decBtn.addEventListener("click", () => {
     time -= 0.5;
     timeElem.innerHTML = time;
     changed = true;
 }
+)
+
+body.addEventListener("keydown", (event) => {
+        if(event.key === "d"){
+            time -= 0.5;
+            timeElem.innerHTML = time;
+            changed = true;
+        }
+    }
 )
 
 
