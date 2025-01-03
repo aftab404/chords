@@ -4,13 +4,16 @@ const timeElem = document.getElementById("time");
 const incBtn = document.getElementById("inc");
 const body = document.querySelector("body");
 const decBtn = document.getElementById("dec");
+const tonalityBtn = document.getElementById("tonality");
 
 const notes = ["A", "B", "C", "D", "E", "F", "G"];
+const tonalities = ["M","m","dim","aug"]
 let time = 1;
 let changed = false;
 let interval = null;
 
 let startShowing = false;
+let showTonality = false;
 
 startBtn.addEventListener("click", () => {
     startShowing = !startShowing;
@@ -59,6 +62,11 @@ body.addEventListener("keydown", (event) => {
     }
 )
 
+tonalityBtn.addEventListener("change", () => {
+    showTonality = !showTonality;
+}
+)
+
 
 function temp(){
     if(!startShowing && interval) {
@@ -77,7 +85,7 @@ function temp(){
                 while(oldNum === newNum){
                     newNum = Math.floor(Math.random() * notes.length);
                 }
-                display.innerHTML = notes[newNum];
+                display.innerHTML = showTonality ? notes[newNum] + `(${tonalities[Math.floor(Math.random() * tonalities.length)]})` : notes[newNum];
                 oldNum = newNum;
             }, time*1000
         )

@@ -5,7 +5,7 @@ body {
     background-color: #f0f0f0;
 }
 
-#top {
+#content {
     padding: 10px;
     display: flex;
     flex-direction: column;
