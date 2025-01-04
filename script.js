@@ -1,115 +1,62 @@
-const startBtn = document.getElementById("start-btn");
-const display = document.getElementById("display");
-const timeElem = document.getElementById("time");
-const incBtn = document.getElementById("inc");
-const body = document.querySelector("body");
-const decBtn = document.getElementById("dec");
-const tonalityBtn = document.getElementById("tonality");
+const content = document.querySelector('#content');
+const head = document.querySelector('head');
+const body = document.querySelector('body');
 
-const notes = ["A", "B", "C", "D", "E", "F", "G"];
-const tonalities = ["M","m","dim","aug"]
-let time = 1;
-let changed = false;
-let interval = null;
-
-let startShowing = false;
-let showTonality = false;
-
-startBtn.addEventListener("click", () => {
-    startShowing = !startShowing;
-    startBtn.innerHTML = startShowing ? "Stop" : "Start";
-    temp()
-})
-
-body.addEventListener("keydown", (event) => {
-    if(event.key === " "){
-        startShowing = !startShowing;
-        startBtn.innerHTML = startShowing ? "Stop" : "Start";
-        temp()
-    }
-})
-
-incBtn.addEventListener("click", () => {
-    time += 0.5;
-    timeElem.innerHTML = time;
-    changed = true;
+if(localStorage.getItem('currPage') === null){
+    localStorage.setItem('currPage', 'home');
 }
-)
 
-body.addEventListener("keydown", (event) => {
-
-    if(event.key === "i"){
-        time += 0.5;
-        timeElem.innerHTML = time;
-        changed = true;
+body.addEventListener('click', (event) => {
+    if(event.target.id === 'practice-btn'){
+        loadPage('practice').then(
+            r => r ? console.log('Page loaded') : console.log('Page not loaded')
+        );
     }
+    if(event.target.id === 'notebook-btn'){
+        loadPage('notebook').then(
+            r => r ? console.log('Page loaded') : console.log('Page not loaded')
+        );
     }
-)
+    if(event.target.id === 'home-btn'){
+        loadPage('home').then(
+            r => r ? console.log('Page loaded') : console.log('Page not loaded')
+        );
+    }
 
-decBtn.addEventListener("click", () => {
-    time -= 0.5;
-    timeElem.innerHTML = time;
-    changed = true;
+} )
+
+async function loadPage(page) {
+    localStorage.setItem('currPage', page);
+    const path = `${page}/${page}`;
+    const pageFile = await fetch(path + '.html');
+    content.innerHTML = await pageFile.text();
+
+    if(body.children.length > 1){
+        body.removeChild(body.lastChild);
+    }
+    if(head.children.length > 1){
+        head.removeChild(head.lastChild);
+    }
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = path + '.style.css';
+    head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = path + '.script.js';
+    script.type = 'module';
+    body.appendChild(script);
+
+    return true;
+
 }
-)
 
-body.addEventListener("keydown", (event) => {
-        if(event.key === "d"){
-            time -= 0.5;
-            timeElem.innerHTML = time;
-            changed = true;
-        }
-    }
-)
-
-tonalityBtn.addEventListener("change", () => {
-    showTonality = !showTonality;
-}
-)
-
-
-function temp(){
-    if(!startShowing && interval) {
-        clearInterval(interval);
+loadPage(localStorage.getItem("currPage")).then(r =>{
+    if (r) {
+        console.log('Page loaded');
     }else {
-        let oldNum = -1; // to prevent the same note from being displayed twice in a row
-        let newNum = -1;
-
-        interval = setInterval(
-            () => {
-                if (changed) {
-                    clearInterval(interval);
-                    temp();
-                    changed = false;
-                }
-                while(oldNum === newNum){
-                    newNum = Math.floor(Math.random() * notes.length);
-                }
-                display.innerHTML = showTonality ? notes[newNum] + `(${tonalities[Math.floor(Math.random() * tonalities.length)]})` : notes[newNum];
-                oldNum = newNum;
-            }, time*1000
-        )
+        console.log('Page not loaded');
     }
 }
-
-navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-
-function onMIDIFailure() {
-    console.log("Could not access your MIDI devices.");
-}
-
-function onMIDISuccess(midiAccess) {
-    for (let input of midiAccess.inputs.values()){
-        input.onmidimessage = getMIDIMessage;
-    }
-}
-
-function getMIDIMessage(midiMessage) {
-    const [command, note, velocity] = midiMessage.data;
-    console.log(command, note, velocity);
-}
-
-
-
-
-
+);
