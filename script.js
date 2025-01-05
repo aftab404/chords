@@ -6,23 +6,24 @@ if(localStorage.getItem('currPage') === null){
     localStorage.setItem('currPage', 'home');
 }
 
-body.addEventListener('click', (event) => {
-    if(event.target.id === 'practice-btn'){
-        loadPage('practice').then(
-            r => r ? console.log('Page loaded') : console.log('Page not loaded')
-        );
-    }
-    if(event.target.id === 'notebook-btn'){
-        loadPage('notebook').then(
-            r => r ? console.log('Page loaded') : console.log('Page not loaded')
-        );
-    }
-    if(event.target.id === 'home-btn'){
-        loadPage('home').then(
-            r => r ? console.log('Page loaded') : console.log('Page not loaded')
-        );
-    }
+let eventEmitters = new Map();
 
+function addEventEmitter(func){
+    eventEmitters.set(func.name, func);
+}
+
+const homeBtn = () => {
+    loadPage('home').then(
+        r => r ? console.log('Page loaded') : console.log('Page not loaded')
+    );
+}
+
+addEventEmitter(homeBtn);
+
+body.addEventListener('click', (event) => {
+    if(eventEmitters.has(event.target.id)){
+        eventEmitters.get(event.target.id)();
+    }
 } )
 
 async function loadPage(page) {

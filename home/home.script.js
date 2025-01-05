@@ -1,14 +1,16 @@
-const practiceBtn = document.getElementById('practice-btn');
-const notebookBtn = document.getElementById('notebook-btn');
-
-practiceBtn.addEventListener('click', () => {
+const practiceBtn = () => {
     loadPage('practice').then(
         r => r ? console.log('Page loaded') : console.log('Page not loaded')
     );
-})
+}
 
-notebookBtn.addEventListener('click', () => {
+const notebookBtn = () => {
     loadPage('notebook').then(
         r => r ? console.log('Page loaded') : console.log('Page not loaded')
     );
-})
+}
+
+addEventEmitter(practiceBtn);
+addEventEmitter(notebookBtn);
+
+
