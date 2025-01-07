@@ -6,25 +6,37 @@ if(localStorage.getItem('currPage') === null){
     localStorage.setItem('currPage', 'home');
 }
 
-let eventEmitters = new Map();
+let clickEventEmitters = new Map();
+let keydownEventEmitters = new Map();
 
 function addEventEmitter(func){
-    eventEmitters.set(func.name, func);
+    const name = func.name.split('_');
+    if(name[1] === 'keydown') {
+        keydownEventEmitters.set(name[0], func);
+    }else if(name[1] === 'click'){
+        clickEventEmitters.set(name[0], func);
+    }
 }
 
-const homeBtn = () => {
+const homeBtn_click = () => {
     loadPage('home').then(
         r => r ? console.log('Page loaded') : console.log('Page not loaded')
     );
 }
 
-addEventEmitter(homeBtn);
+addEventEmitter(homeBtn_click);
 
 body.addEventListener('click', (event) => {
-    if(eventEmitters.has(event.target.id)){
-        eventEmitters.get(event.target.id)();
+    if(clickEventEmitters.has(event.target.id)){
+        clickEventEmitters.get(event.target.id)();
     }
 } )
+
+body.addEventListener('keydown', (event) => {
+    if(keydownEventEmitters.has(event.target.id)){
+        keydownEventEmitters.get(event.target.id)(event);
+    }
+})
 
 async function loadPage(page) {
     localStorage.setItem('currPage', page);

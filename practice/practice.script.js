@@ -1,11 +1,3 @@
-// HTML Elements
-const startBtn = document.getElementById("start-btn");
-const display = document.getElementById("display");
-const timeElem = document.getElementById("time");
-const incBtn = document.getElementById("inc");
-const decBtn = document.getElementById("dec");
-const qualityBtn = document.getElementById("quality");
-
 // Variables
 const notes = ["A", "B", "C", "D", "E", "F", "G"];
 const qualities = ["M","m","dim","aug"]
@@ -16,61 +8,51 @@ let startShowing = false;
 let showQuality = false;
 
 // Event Listeners
-startBtn.addEventListener("click", () => {
+const startBtn_click = () => {
     startShowing = !startShowing;
+    const startBtn = document.getElementById("startBtn");
     startBtn.innerHTML = startShowing ? "Stop" : "Start";
     temp()
-})
+}
 
-body.addEventListener("keydown", (event) => {
+const incBtn_click = () => {
+    const timeElem = document.getElementById("time");
+    time += 0.5;
+    timeElem.innerHTML = time;
+    changed = true;
+}
+
+const decBtn_click = () => {
+    const timeElem = document.getElementById("time");
+    time -= 0.5;
+    timeElem.innerHTML = time;
+    changed = true;
+}
+
+const qualityBtn_click = () => {
+    showQuality = !showQuality;
+}
+
+const body_keydown = (event) => {
+    console.log("fired")
     if(event.key === " "){
-        startShowing = !startShowing;
-        startBtn.innerHTML = startShowing ? "Stop" : "Start";
-        temp()
+        startBtn_click();
+    }else if (event.key === "i"){
+        incBtn_click();
+    }else if(event.key === "d") {
+        decBtn_click();
     }
-})
+}
 
-incBtn.addEventListener("click", () => {
-        time += 0.5;
-        timeElem.innerHTML = time;
-        changed = true;
-    }
-)
-
-body.addEventListener("keydown", (event) => {
-
-        if(event.key === "i"){
-            time += 0.5;
-            timeElem.innerHTML = time;
-            changed = true;
-        }
-    }
-)
-
-decBtn.addEventListener("click", () => {
-        time -= 0.5;
-        timeElem.innerHTML = time;
-        changed = true;
-    }
-)
-
-body.addEventListener("keydown", (event) => {
-        if(event.key === "d"){
-            time -= 0.5;
-            timeElem.innerHTML = time;
-            changed = true;
-        }
-    }
-)
-
-qualityBtn.addEventListener("change", () => {
-        showQuality = !showQuality;
-    }
-)
-
+addEventEmitter(body_keydown);
+addEventEmitter(startBtn_click);
+addEventEmitter(incBtn_click);
+addEventEmitter(decBtn_click);
+addEventEmitter(qualityBtn_click);
 
 // Logic
 function temp(){
+    const display = document.getElementById("display");
     if(!startShowing && interval) {
         clearInterval(interval);
     }else {
