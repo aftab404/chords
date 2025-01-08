@@ -10,21 +10,22 @@ let clickEventEmitters = new Map();
 let keydownEventEmitters = new Map();
 
 function addEventEmitter(func){
-    const name = func.name.split('_');
-    if(name[1] === 'keydown') {
-        keydownEventEmitters.set(name[0], func);
-    }else if(name[1] === 'click'){
-        clickEventEmitters.set(name[0], func);
+    const [event, element] = func.name.split(/_(.*)/).slice(0, 2);
+    if(event === 'keydown') {
+        keydownEventEmitters.set(element, func);
+    }else if(event === 'click'){
+        clickEventEmitters.set(element, func);
     }
 }
 
-const homeBtn_click = () => {
+const click_home_btn = () => {
     loadPage('home').then(
         r => r ? console.log('Page loaded') : console.log('Page not loaded')
     );
 }
 
-addEventEmitter(homeBtn_click);
+addEventEmitter(click_home_btn)
+
 
 body.addEventListener('click', (event) => {
     if(clickEventEmitters.has(event.target.id)){

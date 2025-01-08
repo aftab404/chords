@@ -8,47 +8,47 @@ let startShowing = false;
 let showQuality = false;
 
 // Event Listeners
-const startBtn_click = () => {
+const click_start_btn = () => {
     startShowing = !startShowing;
-    const startBtn = document.getElementById("startBtn");
+    const startBtn = document.getElementById("start_btn");
     startBtn.innerHTML = startShowing ? "Stop" : "Start";
     temp()
 }
 
-const incBtn_click = () => {
+const click_inc_btn = () => {
     const timeElem = document.getElementById("time");
     time += 0.5;
     timeElem.innerHTML = time;
     changed = true;
 }
 
-const decBtn_click = () => {
+const click_dec_btn = () => {
     const timeElem = document.getElementById("time");
     time -= 0.5;
     timeElem.innerHTML = time;
     changed = true;
 }
 
-const qualityBtn_click = () => {
+const click_quality_btn = () => {
     showQuality = !showQuality;
 }
 
-const body_keydown = (event) => {
+const keydown_body = (event) => {
     console.log("fired")
     if(event.key === " "){
-        startBtn_click();
+        click_start_btn();
     }else if (event.key === "i"){
-        incBtn_click();
+        click_inc_btn();
     }else if(event.key === "d") {
-        decBtn_click();
+        click_dec_btn();
     }
 }
 
-addEventEmitter(body_keydown);
-addEventEmitter(startBtn_click);
-addEventEmitter(incBtn_click);
-addEventEmitter(decBtn_click);
-addEventEmitter(qualityBtn_click);
+addEventEmitter(keydown_body);
+addEventEmitter(click_start_btn);
+addEventEmitter(click_inc_btn);
+addEventEmitter(click_dec_btn);
+addEventEmitter(click_quality_btn);
 
 // Logic
 function temp(){
