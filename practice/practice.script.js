@@ -15,6 +15,7 @@ const click_start_btn = () => {
     temp()
 }
 
+
 const click_inc_btn = () => {
     const timeElem = document.getElementById("time");
     time += 0.5;

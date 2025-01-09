@@ -58,7 +58,7 @@ async function loadPage(page) {
     head.appendChild(link);
 
     const script = document.createElement('script');
-    script.src = path + '.script.js';
+    script.src = path + `.script.js?cacheBust=${Date.now()}`;
     script.type = 'module';
     body.appendChild(script);
 
