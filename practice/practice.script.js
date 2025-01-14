@@ -1,11 +1,36 @@
 // Variables
 const notes = ["A", "B", "C", "D", "E", "F", "G"];
 const qualities = ["M","m","dim","aug"]
-let time = 1;
 let changed = false;
 let interval = null;
 let startShowing = false;
-let showQuality = false;
+
+const practice = {
+    time : {
+        init: (val) => { state.time = state.time || val },
+        get: () => state.time,
+        set: (time = state.time) => {
+            state.time = time;
+            const timeElem = document.getElementById("time");
+            timeElem.innerHTML = state.time;
+        }
+    },
+    showQuality: {
+        init: (val) => { state.showQuality = state.showQuality || val },
+        get: () => state.showQuality,
+        set: (showQuality = state.showQuality) => {
+            state.showQuality = showQuality;
+            const qualityElem = document.getElementById("quality_btn");
+            qualityElem.checked = state.showQuality;
+        }
+    }
+}
+
+const { time } = practice;
+const { showQuality } = practice;
+
+time.init(1)
+showQuality.init(false);
 
 // Event Listeners
 const click_start_btn = () => {
@@ -17,21 +42,17 @@ const click_start_btn = () => {
 
 
 const click_inc_btn = () => {
-    const timeElem = document.getElementById("time");
-    time += 0.5;
-    timeElem.innerHTML = time;
+    time.set(time.get() + 0.5);
     changed = true;
 }
 
 const click_dec_btn = () => {
-    const timeElem = document.getElementById("time");
-    time -= 0.5;
-    timeElem.innerHTML = time;
+    time.set(time.get() - 0.5);
     changed = true;
 }
 
 const click_quality_btn = () => {
-    showQuality = !showQuality;
+    showQuality.set(!showQuality.get());
 }
 
 const keydown_body = (event) => {
@@ -70,12 +91,14 @@ function temp(){
                 while(oldNum === newNum){
                     newNum = Math.floor(Math.random() * notes.length);
                 }
-                display.innerHTML = showQuality ? notes[newNum] + `(${qualities[Math.floor(Math.random() * qualities.length)]})` : notes[newNum];
+                display.innerHTML = showQuality.get() ? notes[newNum] + `(${qualities[Math.floor(Math.random() * qualities.length)]})` : notes[newNum];
                 oldNum = newNum;
-            }, time*1000
+            }, time.get()*1000
         )
     }
 }
+
+addPageState("practice", practice);
 
 navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
 

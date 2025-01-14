@@ -6,6 +6,10 @@ if(localStorage.getItem('currPage') === null){
     localStorage.setItem('currPage', 'home');
 }
 
+let pageStates = new Map();
+function addPageState(page, state){
+    pageStates.set(page, state);
+}
 let clickEventEmitters = new Map();
 let keydownEventEmitters = new Map();
 
@@ -18,10 +22,12 @@ function addEventEmitter(func){
     }
 }
 
-const click_home_btn = () => {
-    loadPage('home').then(
-        r => r ? console.log('Page loaded') : console.log('Page not loaded')
-    );
+const click_home_btn = (rerender = false) => {
+    if(!rerender){
+        loadPage('home').then(
+            r => r ? console.log('Page loaded') : console.log('Page not loaded')
+        );
+    }
 }
 
 addEventEmitter(click_home_btn)
@@ -38,6 +44,16 @@ body.addEventListener('keydown', (event) => {
         keydownEventEmitters.get(event.target.id)(event);
     }
 })
+
+function rerender(page){
+    if(pageStates.has(page)) {
+        const pageState = pageStates.get(page);
+        Object.values(pageState).forEach(methods => {
+            const { set } = methods;
+            set();
+        })
+    }
+}
 
 async function loadPage(page) {
     localStorage.setItem('currPage', page);
@@ -62,6 +78,8 @@ async function loadPage(page) {
     script.type = 'module';
     body.appendChild(script);
 
+    rerender(page)
+
     return true;
 
 }
@@ -74,3 +92,10 @@ loadPage(localStorage.getItem("currPage")).then(r =>{
     }
 }
 );
+
+
+const state = {}
+
+fetch('https://fakestoreapi.com/products')
+    .then(res=>res.json())
+    .then(json=>console.log(json))
