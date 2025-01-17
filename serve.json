@@ -1,8 +1,0 @@
-{
-  "rewrites" : [
-    {
-      "source" : "/**!(home/home)",
-      "destination" : "/index.html"
-    }
-  ]
-}

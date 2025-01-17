@@ -10,9 +10,6 @@ const click_notebook_btn = () => {
         );
 }
 
-console.log("url " + window.location.pathname)
-
-
 addEventEmitter(click_practice_btn)
 addEventEmitter(click_notebook_btn);
 

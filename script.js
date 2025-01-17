@@ -2,14 +2,19 @@ const content = document.querySelector('#content');
 const head = document.querySelector('head');
 const body = document.querySelector('body');
 
-if(localStorage.getItem('currPage') === null){
-    localStorage.setItem('currPage', 'home');
+
+let currPage = 'home'
+
+if(window.location.pathname !== '/'){
+    currPage = window.location.pathname.split('/')[1];
+    console.log(currPage)
 }
 
 let pageStates = new Map();
 function addPageState(page, state){
     pageStates.set(page, state);
 }
+
 let clickEventEmitters = new Map();
 let keydownEventEmitters = new Map();
 
@@ -55,10 +60,23 @@ function rerender(page){
     }
 }
 
+window.addEventListener('popstate', (event) => {
+    const page = window.location.pathname.split('/')[1];
+    loadPage(page).then(r => {
+        if(r){
+            console.log('Page loaded');
+        }else {
+            console.log('Page not loaded');
+        }
+    })
+})
+
 async function loadPage(page) {
-    localStorage.setItem('currPage', page);
-    const path = `${page}/${page}`;
-    const pageFile = await fetch(path + '.html');
+    currPage = page;
+    history.pushState(null,'',`/${page}`);
+    const path = `app/${page}/${page}`;
+    const finalPath = path + '.html';
+    const pageFile = await fetch(finalPath);
     content.innerHTML = await pageFile.text();
 
     if(body.children.length > 1){
@@ -84,7 +102,7 @@ async function loadPage(page) {
 
 }
 
-loadPage(localStorage.getItem("currPage")).then(r =>{
+loadPage(currPage).then(r =>{
     if (r) {
         console.log('Page loaded');
     }else {
