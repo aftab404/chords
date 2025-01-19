@@ -1,23 +1,11 @@
-const notebook = {
-    isOpened: {
-        init : (val) => { state.isOpened = state.isOpened || val },
-        get : () => state.isOpened,
-        set : (isOpened = state.isOpened) => {
-            state.isOpened = isOpened;
-            const isOpenedElem = document.getElementById('title');
-            isOpenedElem.innerHTML = state.isOpened;
-        }
-    }
+const notebook = {}
+
+const click_add_chord_btn = () => {
+    addComponent('chord_template');
 }
 
-const { isOpened } = notebook;
+addEvents([
+    click_add_chord_btn
+])
 
-isOpened.init(false);
-
-const click_open_btn = () => {
-    isOpened.set(!isOpened.get());
-}
-
-addEventEmitter(click_open_btn);
-
-pageStates.set('notebook', notebook);
+addPage("notebook", notebook);

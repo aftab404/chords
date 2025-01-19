@@ -1,4 +1,14 @@
     <section>
         <h1 id="title">Notebook</h1>
-        <button id="open_btn">Click</button>
+        <button id="add_chord_btn">Add Chord</button>
+
+        <div id="chords_container">
+            <template id="chord_template">
+                <details>
+                    <summary>Song Name</summary>
+                    <p contenteditable="true">Click here to enter chord</p>
+                    <button class="chord_delete_btn">Delete</button>
+                </details>
+            </template>
+        </div>
     </section>

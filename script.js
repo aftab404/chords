@@ -11,31 +11,37 @@ if(window.location.pathname !== '/'){
 }
 
 let pageStates = new Map();
-function addPageState(page, state){
+function addPage(page, state){
     pageStates.set(page, state);
 }
 
 let clickEventEmitters = new Map();
 let keydownEventEmitters = new Map();
 
-function addEventEmitter(func){
-    const [event, element] = func.name.split(/_(.*)/).slice(0, 2);
-    if(event === 'keydown') {
-        keydownEventEmitters.set(element, func);
-    }else if(event === 'click'){
-        clickEventEmitters.set(element, func);
+function addEvents(funcs){
+    for(const func of funcs){
+        const [event, element] = func.name.split(/_(.*)/).slice(0, 2);
+        if(event === 'keydown') {
+            keydownEventEmitters.set(element, func);
+        }else if(event === 'click'){
+            clickEventEmitters.set(element, func);
+        }
     }
 }
 
-const click_home_btn = (rerender = false) => {
-    if(!rerender){
-        loadPage('home').then(
-            r => r ? console.log('Page loaded') : console.log('Page not loaded')
-        );
-    }
+function addComponent(templateId, contentProps={}, styleProps={}){
+    const template = document.getElementById(templateId);
+    const clone = template.content.cloneNode(true);
+    template.parentNode.appendChild(clone);
+
 }
 
-addEventEmitter(click_home_btn)
+const click_home_btn = () => {
+    loadPage('home').then(
+        r => r ? console.log('Page loaded') : console.log('Page not loaded')
+    );
+}
+
 
 
 body.addEventListener('click', (event) => {
@@ -111,9 +117,7 @@ loadPage(currPage).then(r =>{
 }
 );
 
+addEvents([click_home_btn])
+
 
 const state = {}
-
-fetch('https://fakestoreapi.com/products')
-    .then(res=>res.json())
-    .then(json=>console.log(json))

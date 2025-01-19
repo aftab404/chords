@@ -26,8 +26,7 @@ const practice = {
     }
 }
 
-const { time } = practice;
-const { showQuality } = practice;
+const { time, showQuality } = practice;
 
 time.init(1)
 showQuality.init(false);
@@ -66,11 +65,6 @@ const keydown_body = (event) => {
     }
 }
 
-addEventEmitter(keydown_body);
-addEventEmitter(click_start_btn);
-addEventEmitter(click_inc_btn);
-addEventEmitter(click_dec_btn);
-addEventEmitter(click_quality_btn);
 
 // Logic
 function temp(){
@@ -98,7 +92,6 @@ function temp(){
     }
 }
 
-addPageState("practice", practice);
 
 navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
 
@@ -118,6 +111,13 @@ function getMIDIMessage(midiMessage) {
 }
 
 
+addEvents([
+    click_start_btn,
+    click_inc_btn,
+    click_dec_btn,
+    click_quality_btn,
+    keydown_body
+])
 
-
+addPage("practice", practice);
 
