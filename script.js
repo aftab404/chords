@@ -32,6 +32,13 @@ function addEvents(funcs){
 function addComponent(templateId, contentProps={}, styleProps={}){
     const template = document.getElementById(templateId);
     const clone = template.content.cloneNode(true);
+    for(const [key, value] of Object.entries(contentProps)){
+        clone.querySelector(`#${key}`).innerHTML = value;
+    }
+    for(const rule of styleProps){
+        const [element, style, value] = rule.split("_")
+        clone.querySelector(`#${element}`).style[style] = value;
+    }
     template.parentNode.appendChild(clone);
 
 }
