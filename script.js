@@ -4,13 +4,13 @@ const body = document.querySelector('body');
 
 
 let currPage = 'home'
-
 if(window.location.pathname !== '/'){
     currPage = window.location.pathname.split('/')[1];
     console.log(currPage)
 }
 
 let pageStates = new Map();
+const customComponents = [];
 function addPage(page, state){
     pageStates.set(page, state);
 }
@@ -29,7 +29,7 @@ function addEvents(funcs){
     }
 }
 
-function addComponent(templateId, contentProps={}, styleProps={}){
+function addComponent(templateId, contentProps={}, styleProps=[]){
     const template = document.getElementById(templateId);
     const clone = template.content.cloneNode(true);
     for(const [key, value] of Object.entries(contentProps)){
@@ -39,7 +39,8 @@ function addComponent(templateId, contentProps={}, styleProps={}){
         const [element, style, value] = rule.split("_")
         clone.querySelector(`#${element}`).style[style] = value;
     }
-    template.parentNode.appendChild(clone);
+
+    content.appendChild(clone);
 
 }
 
@@ -71,6 +72,7 @@ function rerender(page){
             set();
         })
     }
+
 }
 
 window.addEventListener('popstate', (event) => {

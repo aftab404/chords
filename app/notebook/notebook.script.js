@@ -1,4 +1,6 @@
+customComponents[0]("hello", "world")
 const notebook = {}
+
 
 const sampleData ={
     "chords": [
@@ -30,4 +32,6 @@ addEvents([
     click_add_chord_btn
 ])
 
-addPage("notebook", notebook);
+addPage(
+    "notebook",
+    notebook)
