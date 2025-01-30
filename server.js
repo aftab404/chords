@@ -21,24 +21,33 @@ function serveFile(file, contentType, res){
 
 const server = http.createServer((req, res) => {
     console.log(req.url)
-    if(req.url.includes('app')){
+    if(req.url.includes('app') || req.url.includes('components')){
         if(req.url.endsWith('.css')){
+            console.log(1, req.url)
             serveFile(req.url, 'text/css', res)
         }else if(req.url.includes('.js')){
+            console.log(2, req.url)
 
             const newUrl = url.parse(req.url, true).pathname
-            serveFile(newUrl,'text/javascript', res)
+            serveFile(newUrl,'application/javascript', res)
         }else {
+            console.log(3, req.url)
             serveFile(req.url , 'text/html', res)
         }
-    }else {
+    }
+    else {
+
         if(req.url === '/' ) {
+            console.log(4, req.url)
             serveFile('index.html', 'text/html', res)
         }else if(req.url === '/style.css') {
+            console.log(5, req.url)
             serveFile('style.css', 'text/css', res)
-        }else if(req.url === '/script.js') {
-            serveFile('script.js', 'text/javascript', res)
+        }else if(req.url.includes('/script.js')) {
+            console.log(6, req.url)
+            serveFile('script.js', 'application/javascript', res)
         }else {
+            console.log(7, req.url)
             serveFile('index.html', 'text/html', res)
         }
     }

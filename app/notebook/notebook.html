@@ -11,7 +11,20 @@
             </details>
         </template>
     </div>
-    <my-card title="Title" content="Content">
-        new
-    </my-card>
+    <template>
+        <p>Persistent</p>
+        <my-card name="card" content="this is a persistent card"></my-card>
+    </template>
+    <template data-if="showCard">
+        <p>Conditional</p>
+        <my-card name="card" content="this is a conditional card"></my-card>
+    </template>
+    <template data-for="chord of chords">
+        <p>Loop</p>
+        <my-card name="chord.name" content="chord.content"></my-card>
+    </template>
+    <template data-if="showCard" data-for="chord of chords">
+        <p>Loop and conditional</p>
+        <my-card name="chord.name" content="chord.content"></my-card>
+    </template>
 </section>

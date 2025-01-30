@@ -1,21 +1,26 @@
-// custom tags render on load and templates can be used for conditional rendering
-// static components, dynamic components
-// fetch components from server to load js
-// use templates and data tags to render components
-
-
+// always cover custom components in a template tag
+// <template data-if="card">
+// <template data-for="card">
+// <template >
+// link states with components
+// link components to pages
+// check the type of template from script and then render the template
+// use a proxy for state to rerender on change
+// fix server to serve all files of the components
+// think about just using string literals to use in js instead of creating separate html
+console.log("card")
 const card = (name, content) => {
-    const template = document.getElementById("card")
     const placeholder = document.getElementsByTagName("my-card");
-    const clone = template.content.cloneNode(true);
-
-    clone.querySelector("#title").innerHTML = name;
-    clone.querySelector("#content").innerHTML = content;
-
-    for(const child of placeholder){
-        child.appendChild(clone);
+    for (const ph of placeholder) {
+        ph.innerHTML = `
+            <div class="card-header">
+                <h2>${name}</h2>
+            </div>
+            <div class="card-body">
+                <p>${content}</p>
+            </div>
+        `
     }
 }
 
-
-customComponents.push(card)
+export { card }

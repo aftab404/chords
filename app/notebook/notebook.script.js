@@ -1,5 +1,8 @@
-customComponents[0]("hello", "world")
+import { card } from "../../components/card.js"
+
 const notebook = {}
+
+card("Chords", "Add chords to your notebook")
 
 
 const sampleData ={
