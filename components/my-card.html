@@ -1,16 +1,17 @@
-<main>
+<section>
   <div id="card">
     <h1 id="title">Title</h1>
     <span id="content"> Content </span>
   </div>
   <button id="btn">Click me</button>
-</main>
-<script>
-  console.log("Hello World");
-
-  const click_btn = () => {
-    console.log("Button clicked");
-  };
-
-  addEvents([click_btn]);
+</section>
+<script type="module" src="my-card.js">
 </script>
+
+
+<!--
+1. load components on first page load
+2. track for changes in state
+3. rerender component on state change
+4. maybe use proxy to track changes in state
+-->

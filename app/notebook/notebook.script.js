@@ -1,24 +1,18 @@
 const notebook = {
   showCard: {
-    init: () => {
-      state.showCard = state.showCard || false;
+    init: (showCard) => {
+      state.showCard = state.showCard || showCard;  
     },
     get: () => state.showCard,
     set: (showCard = state.showCard) => {
       state.showCard = showCard;
-      if (showCard)
-        addComponent("showCard", "my-card", {
-          title: "show card",
-          content: "This is a card",
-        });
     },
   },
 };
 
 const { showCard } = notebook;
 
-showCard.init();
-showCard.set(false);
+showCard.init(false);
 
 const sampleData = {
   chords: [
