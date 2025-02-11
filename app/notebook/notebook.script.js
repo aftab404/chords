@@ -5,14 +5,16 @@ const notebook = {
     },
     get: () => state.showCard,
     set: (showCard = state.showCard) => {
+      const stateDisplay = document.getElementById("show_card_display");
       state.showCard = showCard;
+      stateDisplay.textContent = state.showCard ? "true" : "false";
     },
   },
 };
 
+
 const { showCard } = notebook;
 
-showCard.init(false);
 
 const sampleData = {
   chords: [
@@ -39,6 +41,10 @@ const click_add_chord_btn = () => {
   addComponent("chord_template");
 };
 
-addEvents([click_add_chord_btn]);
+const click_show_card_btn = () => {
+    showCard.set(!showCard.get());
+    }
+
+addEvents([click_add_chord_btn, click_show_card_btn]);
 
 addPage("notebook", notebook);

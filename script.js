@@ -13,6 +13,8 @@ const customComponents = new Map();
 
 function addPage(page, state) {
   pageStates.set(page, state);
+  console.log("Page added");
+  rerender(page);
 }
 
 let clickEventEmitters = new Map();
@@ -51,6 +53,8 @@ function addComponent(templateId, tag, contentProps = {}, styleProps = []) {
           }
 
           const script = doc.querySelector("script");
+          const section = doc.querySelector("section");
+          section.setAttribute("data-id", templateId)
 
           template.parentElement.appendChild(doc.querySelector("section"));
 
@@ -87,6 +91,7 @@ body.addEventListener("keydown", (event) => {
 });
 
 const pageComponents = new Map();
+const stateComponents = new Map();
 
 pageComponents.set("notebook", ["showCard"]);
 
@@ -152,7 +157,6 @@ async function loadPage(page) {
     }
   }
 
-  rerender(page);
 
   return true;
 }
@@ -167,4 +171,28 @@ loadPage(currPage).then((r) => {
 
 addEvents([click_home_btn]);
 
-const state = {};
+const stateProxy = {};
+
+const state = new Proxy(stateProxy, {
+    set: (obj, prop, value) => {
+        obj[prop] = value;
+        updateComponents(obj, prop, value);
+        return true;
+    },
+    });
+
+
+const updateComponents = (obj, prop, value) => {
+    const components = document.querySelectorAll(`[data-id="${prop}"]`);
+    if(value){
+        components.forEach(component => {
+            component.style.display = "block";
+        })
+    }else{
+        components.forEach(component => {
+            component.style.display = "none";
+        })
+    }
+}
+
+
