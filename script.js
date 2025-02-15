@@ -33,28 +33,25 @@ function addEvents(funcs) {
 
 const pageInitialized = new Map();
 
-function addComponent(templateId, tag, contentProps = {}, styleProps = []) {
-  const template = document.querySelector(`template[data-if="${templateId}"]`);
-  console.log(Object.values(template.attributes).map((attr) => attr.name));
-  const attrType = Object.values(template.attributes).map((attr) => attr.name);
-  console.log(pageStates)
-  if (attrType.includes("data-if")) {
-    if (pageStates.get("notebook").showCard.get()) {
+function addComponent(template, stateName){
       const clone = template.content.cloneNode(true);
-      const element = clone.children[1];
+      const element = clone.children[0];
+      const tag = element.tagName.toLowerCase();
       const path = `components/${tag}.html`;
       fetch(path)
         .then((r) => r.text())
         .then((r) => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(r, "text/html");
-          for (const [key, value] of Object.entries(contentProps)) {
-            doc.querySelector(`#${key}`).textContent = value;
+          console.log(Object.values(element.attributes));
+          const contentProps = Object.values(element.attributes)
+          for (const prop of contentProps) {
+            doc.querySelector(`#${prop.name}`).textContent = prop.value;
           }
 
           const script = doc.querySelector("script");
           const section = doc.querySelector("section");
-          section.setAttribute("data-id", templateId)
+          section.setAttribute("data-id", stateName)
 
           template.parentElement.appendChild(doc.querySelector("section"));
 
@@ -64,8 +61,6 @@ function addComponent(templateId, tag, contentProps = {}, styleProps = []) {
             template.parentElement.appendChild(newScript);
           }
         });
-    }
-  }
   //for(const rule of styleProps){
   //    const [element, style, value] = rule.split("_")
   //    clone.querySelector(`#${element}`).style[style] = value;
@@ -104,13 +99,16 @@ function rerender(page) {
     });
   }
 
-  const components = pageComponents.get(page);
-  if (components) {
-    addComponent("showCard", "my-card", {
-      title: "Hello World",
-      content: "This is a card",
-    });
-  }
+  const templates = document.getElementsByTagName("template");
+    for (const template of templates) {
+        const stateName = template.getAttribute("data-if");
+        if(stateName && pageStates.get(page)[stateName].get()){
+            console.log(Object.entries(template.attributes))
+            addComponent(template, stateName)
+        }else {
+           addComponent(template, stateName)
+        }
+    }
 }
 
 window.addEventListener("popstate", (event) => {
@@ -149,15 +147,6 @@ async function loadPage(page) {
   script.type = "module";
   body.appendChild(script);
 
-  const templates = document.getElementsByTagName("template");
-  for (const template of templates) {
-    const dataset = template.dataset;
-    if (dataset.if) {
-      console.log(template);
-    }
-  }
-
-
   return true;
 }
 
@@ -193,6 +182,7 @@ const updateComponents = (obj, prop, value) => {
             component.style.display = "none";
         })
     }
+    // templates not needed
 }
 
 

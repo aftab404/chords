@@ -15,19 +15,12 @@
         </template>
     </div>
     <template>
-        <p>Persistent</p>
         <my-card name="card" content="this is a persistent card"></my-card>
     </template>
-    <template data-if="showCard">
-        <p>Conditional</p>
-        <my-card ></my-card>
+    <template data-if="showCard" >
+        <my-card title="Show Card" content="this is a conditional card 1"></my-card>
     </template>
     <template data-for="chord of chords">
-        <p>Loop</p>
-        <my-card ></my-card>
-    </template>
-    <template data-if="showCard" data-for="chord of chords">
-        <p>Loop and conditional</p>
         <my-card ></my-card>
     </template>
 </section>
