@@ -9,7 +9,6 @@ if (window.location.pathname !== "/") {
 }
 
 let pageStates = new Map();
-const customComponents = new Map();
 
 function addPage(page, state) {
   pageStates.set(page, state);
@@ -31,7 +30,6 @@ function addEvents(funcs) {
   }
 }
 
-const pageInitialized = new Map();
 
 function addComponent(template, stateName){
       const clone = template.content.cloneNode(true);
@@ -52,6 +50,11 @@ function addComponent(template, stateName){
           const script = doc.querySelector("script");
           const section = doc.querySelector("section");
           section.setAttribute("data-id", stateName)
+          if(pageStates.get(currPage)[stateName].get()){
+              section.style.display = "block";
+          }else{
+              section.style.display = "none";
+          }
 
           template.parentElement.appendChild(doc.querySelector("section"));
 
@@ -85,10 +88,6 @@ body.addEventListener("keydown", (event) => {
   }
 });
 
-const pageComponents = new Map();
-const stateComponents = new Map();
-
-pageComponents.set("notebook", ["showCard"]);
 
 function rerender(page) {
   if (pageStates.has(page)) {
@@ -102,15 +101,14 @@ function rerender(page) {
   const templates = document.getElementsByTagName("template");
     for (const template of templates) {
         const stateName = template.getAttribute("data-if");
-        if(stateName && pageStates.get(page)[stateName].get()){
+        if(stateName ){
             console.log(Object.entries(template.attributes))
             addComponent(template, stateName)
-        }else {
-           addComponent(template, stateName)
         }
+        // add component to dom but dont render it, render it when state changes
     }
 }
-
+// nested components are possible using recursion rendering
 window.addEventListener("popstate", (event) => {
   const page = window.location.pathname.split("/")[1];
   loadPage(page).then((r) => {

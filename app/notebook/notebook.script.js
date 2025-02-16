@@ -13,7 +13,13 @@ const notebook = {
 };
 
 
+
+
 const { showCard } = notebook;
+
+
+showCard.init(false);
+
 
 
 const sampleData = {
