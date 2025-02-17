@@ -35,8 +35,8 @@ function addComponent(template, stateName){
       const clone = template.content.cloneNode(true);
       const element = clone.children[0];
       const tag = element.tagName.toLowerCase();
-      const path = `components/${tag}.html`;
-      fetch(path)
+      const htmlPath = `components/${tag}.html`;
+      fetch(htmlPath)
         .then((r) => r.text())
         .then((r) => {
           const parser = new DOMParser();
@@ -59,11 +59,14 @@ function addComponent(template, stateName){
           template.parentElement.appendChild(doc.querySelector("section"));
 
           if (script) {
+            console.log(script)
             const newScript = document.createElement("script");
-            newScript.textContent = script.textContent;
+            newScript.type = "module";
+            newScript.src = `components/${tag}.script.js?cacheBust=${Date.now()}`;
             template.parentElement.appendChild(newScript);
           }
         });
+        
   //for(const rule of styleProps){
   //    const [element, style, value] = rule.split("_")
   //    clone.querySelector(`#${element}`).style[style] = value;
@@ -105,7 +108,7 @@ function rerender(page) {
             console.log(Object.entries(template.attributes))
             addComponent(template, stateName)
         }
-        // add component to dom but dont render it, render it when state changes
+        // fix the component scripts
     }
 }
 // nested components are possible using recursion rendering
