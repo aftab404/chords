@@ -31,7 +31,8 @@ function addEvents(funcs) {
 }
 
 
-function addComponent(template, stateName){
+function addComponent(template){
+
       const clone = template.content.cloneNode(true);
       const element = clone.children[0];
       const tag = element.tagName.toLowerCase();
@@ -41,31 +42,85 @@ function addComponent(template, stateName){
         .then((r) => {
           const parser = new DOMParser();
           const doc = parser.parseFromString(r, "text/html");
-          console.log(Object.values(element.attributes));
-          const contentProps = Object.values(element.attributes)
-          for (const prop of contentProps) {
-            doc.querySelector(`#${prop.name}`).textContent = prop.value;
-          }
+          if(template.getAttribute("data-if")){
+            const contentProps = Object.values(element.attributes)
+            for (const prop of contentProps) {
+              doc.querySelector(`#${prop.name}`).textContent = prop.value;
+            }
 
-          const script = doc.querySelector("script");
-          const section = doc.querySelector("section");
-          section.setAttribute("data-id", stateName)
-          if(pageStates.get(currPage)[stateName].get()){
-              section.style.display = "block";
+            const script = doc.querySelector("script");
+            const section = doc.querySelector("section");
+            const stateName = template.getAttribute("data-if");
+            section.setAttribute("data-id", stateName)
+            if(pageStates.get(currPage)[stateName].get()){
+                section.style.display = "block";
+            }else{
+                section.style.display = "none";
+            }
+
+            template.parentElement.appendChild(doc.querySelector("section"));
+
+            if (script) {
+              const newScript = document.createElement("script");
+              newScript.type = "module";
+              newScript.src = `components/${tag}.script.js?cacheBust=${Date.now()}`;
+              template.parentElement.appendChild(newScript);
+            }
+
+
+          }else if(template.getAttribute("data-for")){
+            console.log("for")
+            const stateName = template.getAttribute("data-for").split(" ")[2];
+            console.log(stateName)
+            for(const data of pageStates.get(currPage)[stateName].get()){
+              console.log(data)
+              const contentProps = Object.entries(data)
+              for (const prop of contentProps) {
+                console.log(doc)
+                doc.querySelector(`#${prop[0]}`).textContent = prop[1];
+              }
+
+              const script = doc.querySelector("script");
+              const section = doc.querySelector("section");
+              section.setAttribute("data-id", stateName)
+              if(pageStates.get(currPage)[stateName].get()){
+                  section.style.display = "block";
+              }else{
+                  section.style.display = "none";
+              }
+
+              template.parentElement.appendChild(doc.querySelector("section"));
+
+              if (script) {
+                const newScript = document.createElement("script");
+                newScript.type = "module";
+                newScript.src = `components/${tag}.script.js?cacheBust=${Date.now()}`;
+                template.parentElement.appendChild(newScript);
+              }
+
+            }
+
           }else{
-              section.style.display = "none";
-          }
+            console.log("else")
+            const contentProps = Object.values(element.attributes)
+            for (const prop of contentProps) {
+              doc.querySelector(`#${prop.name}`).textContent = prop.value;
+            }
 
-          template.parentElement.appendChild(doc.querySelector("section"));
+            const script = doc.querySelector("script");
 
-          if (script) {
-            console.log(script)
-            const newScript = document.createElement("script");
-            newScript.type = "module";
-            newScript.src = `components/${tag}.script.js?cacheBust=${Date.now()}`;
-            template.parentElement.appendChild(newScript);
+            template.parentElement.appendChild(doc.querySelector("section"));
+
+            if (script) {
+              const newScript = document.createElement("script");
+              newScript.type = "module";
+              newScript.src = `components/${tag}.script.js?cacheBust=${Date.now()}`;
+              template.parentElement.appendChild(newScript);
+            }
+
           }
         });
+        
         
   //for(const rule of styleProps){
   //    const [element, style, value] = rule.split("_")
@@ -103,12 +158,7 @@ function rerender(page) {
 
   const templates = document.getElementsByTagName("template");
     for (const template of templates) {
-        const stateName = template.getAttribute("data-if");
-        if(stateName ){
-            console.log(Object.entries(template.attributes))
-            addComponent(template, stateName)
-        }
-        // fix the component scripts
+            addComponent(template)
     }
 }
 // nested components are possible using recursion rendering

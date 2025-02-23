@@ -5,22 +5,13 @@
     <p id="show_card_display"></p>
     <button id="show_card_btn">Show Card</button>
 
-    <div id="chords_container">
-        <template id="chord_template">
-            <details>
-                <summary id="name">Song Name</summary>
-                <p id="notes" contenteditable="true">Click here to enter chord</p>
-                <button class="chord_delete_btn">Delete</button>
-            </details>
-        </template>
-    </div>
     <template>
-        <my-card name="card" content="this is a persistent card"></my-card>
+        <my-card title="card" content="this is a persistent card"></my-card>
     </template>
     <template data-if="showCard" >
         <my-card title="Show Card" content="this is a conditional card 1"></my-card>
     </template>
     <template data-for="chord of chords">
-        <my-card ></my-card>
+        <my-card title="chord.title" content="chord.content"></my-card>
     </template>
 </section>

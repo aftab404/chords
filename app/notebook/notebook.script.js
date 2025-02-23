@@ -10,34 +10,43 @@ const notebook = {
       stateDisplay.textContent = state.showCard ? "true" : "false";
     },
   },
+  chords: {
+    init: (chords) => {
+      state.chords = state.chords || chords;
+    },
+    get: () => state.chords,
+    set: (chord) => {
+      state.chords.push(chord);
+    },
+  },
 };
 
 
 
 
-const { showCard } = notebook;
+const { showCard, chords} = notebook;
 
 
 showCard.init(false);
 
 
 
-const sampleData = {
-  chords: [
+  const c = [
     {
-      name: "C",
-      notes: ["C", "E", "G"],
+      title: "C",
+      content: "C major chord",
     },
     {
-      name: "D",
-      notes: ["D", "F#", "A"],
+      title: "D",
+      content: "D major chord",
     },
     {
-      name: "E",
-      notes: ["E", "G#", "B"],
-    },
-  ],
-};
+      title: "E",
+      content: "E major chord",
+    }
+  ]
+
+chords.init(c)
 
 // sampleData.chords.forEach(chord => {
 //     addComponent("chord_template", chord, ["name_padding_4px", "name_margin_2px", "name_border_solid"])
