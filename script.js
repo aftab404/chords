@@ -43,13 +43,14 @@ function addComponent(template){
           const parser = new DOMParser();
           const doc = parser.parseFromString(r, "text/html");
           if(template.getAttribute("data-if")){
+            const sectionTemplate = doc.querySelector("section");
+            const section = sectionTemplate.cloneNode(true);
             const contentProps = Object.values(element.attributes)
             for (const prop of contentProps) {
-              doc.querySelector(`#${prop.name}`).textContent = prop.value;
+              section.querySelector(`#${prop.name}`).textContent = prop.value;
             }
 
             const script = doc.querySelector("script");
-            const section = doc.querySelector("section");
             const stateName = template.getAttribute("data-if");
             section.setAttribute("data-id", stateName)
             if(pageStates.get(currPage)[stateName].get()){
@@ -58,7 +59,7 @@ function addComponent(template){
                 section.style.display = "none";
             }
 
-            template.parentElement.appendChild(doc.querySelector("section"));
+            template.parentElement.appendChild(section);
 
             if (script) {
               const newScript = document.createElement("script");
@@ -69,27 +70,22 @@ function addComponent(template){
 
 
           }else if(template.getAttribute("data-for")){
-            console.log("for")
             const stateName = template.getAttribute("data-for").split(" ")[2];
-            console.log(stateName)
-            for(const data of pageStates.get(currPage)[stateName].get()){
+            const stateData = pageStates.get(currPage)[stateName].get().filter(e => e != undefined);
+            
+            for(const data of stateData){
+              const sectionTemplate = doc.querySelector("section");
+              const section = sectionTemplate.cloneNode(true);
               console.log(data)
               const contentProps = Object.entries(data)
               for (const prop of contentProps) {
-                console.log(doc)
-                doc.querySelector(`#${prop[0]}`).textContent = prop[1];
+                section.querySelector(`#${prop[0]}`).textContent = prop[1];
               }
 
               const script = doc.querySelector("script");
-              const section = doc.querySelector("section");
               section.setAttribute("data-id", stateName)
-              if(pageStates.get(currPage)[stateName].get()){
-                  section.style.display = "block";
-              }else{
-                  section.style.display = "none";
-              }
 
-              template.parentElement.appendChild(doc.querySelector("section"));
+              template.parentElement.appendChild(section);
 
               if (script) {
                 const newScript = document.createElement("script");
@@ -101,7 +97,6 @@ function addComponent(template){
             }
 
           }else{
-            console.log("else")
             const contentProps = Object.values(element.attributes)
             for (const prop of contentProps) {
               doc.querySelector(`#${prop.name}`).textContent = prop.value;

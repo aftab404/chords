@@ -26,7 +26,7 @@ const notebook = {
 
 const { showCard, chords} = notebook;
 
-
+chords.init([]);
 showCard.init(false);
 
 
@@ -46,8 +46,10 @@ showCard.init(false);
     }
   ]
 
-chords.init(c)
 
+  for(const chord of c){
+    chords.set(chord);
+  }
 // sampleData.chords.forEach(chord => {
 //     addComponent("chord_template", chord, ["name_padding_4px", "name_margin_2px", "name_border_solid"])
 // })
